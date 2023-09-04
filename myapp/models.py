@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -26,9 +28,27 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='описание')
     video = models.CharField(max_length=300, verbose_name='ссылка на видео')
 
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс')
+
     def __str__(self):
         return f'{self.name}'
 
     class Meta:
         verbose_name = 'урок'
         verbose_name_plural = 'уроки'
+
+class Payment(models.Model):
+    METHOD_TRANSACTION = 'transaction'
+    METHOD_CASH = 'cash'
+
+    METHODS = (
+        (METHOD_TRANSACTION, 'Перевод на счёт'),
+        (METHOD_CASH, 'Наличные'),
+    )
+
+    user = models.CharField(max_length=150, verbose_name='пользователь')
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name='дата оплаты')
+    paid_course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
+    paid_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='урок', **NULLABLE)
+    amount = models.IntegerField(verbose_name='сумма')
+    method = models.CharField(max_length=20, choices=METHODS, default=METHOD_TRANSACTION, verbose_name='метод оплаты')
