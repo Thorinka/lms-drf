@@ -7,6 +7,10 @@ NULLABLE = {
     'null': True
 }
 
+class UserRoles(models.TextChoices):
+    MEMBER = 'member', 'Пользователь'
+    MODERATOR = 'moderator', 'Модератор'
+
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True, verbose_name='почта')
@@ -14,6 +18,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=35, verbose_name='телефон', **NULLABLE)
     country = models.CharField(max_length=35, verbose_name='страна', **NULLABLE)
     avatar = models.ImageField(upload_to='users/', **NULLABLE)
+    role = models.CharField(max_length=9, choices=UserRoles.choices, default='member')
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

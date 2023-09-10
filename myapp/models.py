@@ -13,6 +13,7 @@ class Course(models.Model):
     name = models.CharField(max_length=150, verbose_name='название')
     preview = models.ImageField(upload_to='app/course/', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'{self.name}'
@@ -29,6 +30,7 @@ class Lesson(models.Model):
     video = models.CharField(max_length=300, verbose_name='ссылка на видео')
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'{self.name}'
@@ -46,7 +48,7 @@ class Payment(models.Model):
         (METHOD_CASH, 'Наличные'),
     )
 
-    user = models.CharField(max_length=150, verbose_name='пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
     payment_date = models.DateTimeField(auto_now_add=True, verbose_name='дата оплаты')
     paid_course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
     paid_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='урок', **NULLABLE)
