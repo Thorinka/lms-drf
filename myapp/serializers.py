@@ -2,7 +2,8 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import SlugRelatedField
 
-from myapp.models import Course, Lesson, Payment
+from myapp.models import Course, Lesson, Payment, Subscription
+from myapp.validators import VideoValidator
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -21,9 +22,13 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class CourseDetailSerializer(serializers.ModelSerializer):
     course_lessons = SerializerMethodField()
+    subscription = SerializerMethodField()
 
     def get_course_lessons(self, instance):
         return [lesson.name for lesson in Lesson.objects.filter(course=instance)]
+
+    def get_subscription(self, instance):
+        return Subscription.objects.filter(course=instance).exists()
 
     class Meta:
         model = Course
@@ -34,6 +39,7 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = '__all__'
+        validators = [VideoValidator(field='video')]
 
 
 class LessonListSerializer(serializers.ModelSerializer):
@@ -49,3 +55,8 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ('user', 'payment_date', 'paid_course', 'paid_lesson', 'amount', 'method',)
 
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ('user', 'course', 'is_active')

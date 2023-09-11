@@ -39,6 +39,7 @@ class Lesson(models.Model):
         verbose_name = 'урок'
         verbose_name_plural = 'уроки'
 
+
 class Payment(models.Model):
     METHOD_TRANSACTION = 'transaction'
     METHOD_CASH = 'cash'
@@ -54,3 +55,9 @@ class Payment(models.Model):
     paid_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='урок', **NULLABLE)
     amount = models.IntegerField(verbose_name='сумма')
     method = models.CharField(max_length=20, choices=METHODS, default=METHOD_TRANSACTION, verbose_name='метод оплаты')
+
+
+class Subscription(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='пользователь')
+    is_active = models.BooleanField(default=True, verbose_name='активен')
