@@ -13,7 +13,8 @@ class Course(models.Model):
     name = models.CharField(max_length=150, verbose_name='название')
     preview = models.ImageField(upload_to='app/course/', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE, verbose_name='владелец')
+    price = models.IntegerField(verbose_name='цена')
 
     def __str__(self):
         return f'{self.name}'

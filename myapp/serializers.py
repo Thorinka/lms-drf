@@ -3,6 +3,7 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import SlugRelatedField
 
 from myapp.models import Course, Lesson, Payment, Subscription
+from myapp.services.create_payment import create_session
 from myapp.validators import VideoValidator
 
 
@@ -51,9 +52,15 @@ class LessonListSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    payment_url = SerializerMethodField()
+
     class Meta:
         model = Payment
-        fields = ('user', 'payment_date', 'paid_course', 'paid_lesson', 'amount', 'method',)
+        fields = ('user', 'payment_date', 'paid_course', 'paid_lesson', 'amount', 'method', 'payment_url')
+
+    def get_payment_url(self, payment):
+        return create_session(payment)
+
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
