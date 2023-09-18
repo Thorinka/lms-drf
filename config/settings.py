@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
+    'django_celery_beat',
 
     'rest_framework',
     'django_filters',
@@ -141,3 +142,23 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ]
 }
+
+
+# Настройки для Celery
+
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = 'redis://localhost:6379'
+
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+
+
+# Параметры для рассылки
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True

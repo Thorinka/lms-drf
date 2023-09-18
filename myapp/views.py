@@ -14,6 +14,7 @@ from myapp.permissions import IsOwner, IsModerator
 from myapp.serializers import CourseSerializer, LessonSerializer, LessonListSerializer, PaymentSerializer, \
     CourseDetailSerializer, SubscriptionSerializer
 from myapp.services.create_payment import create_session
+from myapp.tasks import send_message_about_changes
 from users.models import UserRoles
 
 
@@ -59,6 +60,9 @@ class LessonCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         new_lesson = serializer.save()
         new_lesson.owner = self.request.user
+        subscribers = Subscription.objects.filter(course=new_lesson.course)
+        user_emails = [subscriber.user.email for subscriber in subscribers]
+        send_message_about_changes.delay(new_lesson.course.name, user_emails)
         new_lesson.save()
 
 
