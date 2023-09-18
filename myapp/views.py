@@ -13,6 +13,7 @@ from myapp.paginators import CoursePaginator, LessonPaginator
 from myapp.permissions import IsOwner, IsModerator
 from myapp.serializers import CourseSerializer, LessonSerializer, LessonListSerializer, PaymentSerializer, \
     CourseDetailSerializer, SubscriptionSerializer
+from myapp.services.create_payment import create_session
 from users.models import UserRoles
 
 
@@ -95,13 +96,6 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwner | IsAdminUser]
 
 
-# class PaymentViewSet(viewsets.ModelViewSet):
-#     serializer_class = PaymentSerializer
-#     queryset = Payment.objects.all()
-#     filter_backends = [DjangoFilterBackend, OrderingFilter]
-#     filterset_fields = ('paid_course', 'paid_lesson', 'method')
-#     ordering_fields = ('payment_date',)
-#     permission_classes = [IsAuthenticated]
 
 class PaymentCreateAPIView(generics.CreateAPIView):
     serializer_class = PaymentSerializer
@@ -113,6 +107,8 @@ class PaymentCreateAPIView(generics.CreateAPIView):
         new_payment.save()
 
 
+
+
 class PaymentListAPIView(generics.ListAPIView):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
@@ -122,26 +118,7 @@ class PaymentListAPIView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
 
 
-class PaymentRetrieveAPIView(generics.RetrieveAPIView):
-    serializer_class = PaymentSerializer
-    queryset = Payment.objects.all()
-    permission_classes = [IsAdminUser]
-
-
-class PaymentUpdateAPIView(generics.UpdateAPIView):
-    serializer_class = PaymentSerializer
-    queryset = Payment.objects.all()
-    permission_classes = [IsAdminUser]
-
-
-class PaymentDestroyAPIView(generics.DestroyAPIView):
-    serializer_class = PaymentSerializer
-    queryset = Payment.objects.all()
-    permission_classes = [IsAdminUser]
-
-
-
-#Subscription
+# Subscription
 class SubscriptionCreateAPIView(generics.CreateAPIView):
     serializer_class = SubscriptionSerializer
     permission_classes = [IsAuthenticated]
