@@ -56,3 +56,8 @@ Docker
 To start in Docker you will need installed Docker on your device. To start run the following commands:
 `docker build -t drf-homework .` - builds image for this app in Docker
 `docker run drf-homework` - launches a container with the saved docker image
+
+Docker Compose
+To launch the app run the commands:
+`docker-compose build`\
+`docker-compose up`
