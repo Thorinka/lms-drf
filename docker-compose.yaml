@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     image: postgres
-    env_file: ./.env
+    env_file: .env
     environment:
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: drf_homework
@@ -21,6 +21,7 @@ services:
 
   app:
     build: .
+    env_file: .env
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - '8000:8000'
@@ -32,7 +33,7 @@ services:
     ports:
       - '6379:6379'
     healthcheck:
-      test: [ "CMD-SHELL", "redis_isready" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,7 +47,7 @@ services:
       - db
       - app
     healthcheck:
-      test: [ "CMD-SHELL", "celery_isready" ]
+      test: [ "CMD-SHELL", "-A", "app", "status" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -60,11 +61,6 @@ services:
       - redis
       - db
       - app
-    healthcheck:
-      test: [ "CMD-SHELL", "celery_beat_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   postgres_data:
