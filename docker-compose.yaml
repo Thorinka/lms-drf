@@ -3,7 +3,8 @@ version: '3'
 services:
   db:
     image: postgres
-    env_file: .env
+    env_file:
+      - .env
     environment:
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: drf_homework
@@ -21,7 +22,8 @@ services:
 
   app:
     build: .
-    env_file: .env
+    env_file:
+      - .env
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - '8000:8000'
@@ -47,7 +49,7 @@ services:
       - db
       - app
     healthcheck:
-      test: [ "CMD-SHELL", "-A", "app", "status" ]
+      test: celery -A config status
       interval: 10s
       timeout: 5s
       retries: 5
